@@ -9,11 +9,10 @@ type Storage struct {
 type Store interface {
 	// Users
 	CreateUser() error
-
+	GetUserByID(id string) (*User, error)
 	//Tasks
 	CreateTask(t *Task) (*Task, error)
 	GetTask(id string) (*Task, error)
-	
 }
 
 func NewStore(db *sql.DB) *Storage {
@@ -46,4 +45,10 @@ func (s *Storage) GetTask(id string) (*Task, error) {
 	var t Task
 	err := s.db.QueryRow("SELECT id, name, status, project_id, assigned_to, createdAt FROM tasks WHERE id = ?", id).Scan(&t.ID, &t.Name, &t.Status, &t.ProjectID, &t.AssignedToID, &t.CreatedAt)
 	return &t, err
+}
+
+func (s *Storage) GetUserByID(id string) (*User, error) {
+	var u User
+	err := s.db.QueryRow("SELECT id, email, firstName, lastName, createdAt FROM users WHERE id = ?", id).Scan(&u.ID, &u.Email, &u.FirstName, &u.LastName, &u.CreatedAt)
+	return &u, err
 }

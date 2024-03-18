@@ -40,6 +40,15 @@ func TestCreateTask(t *testing.T) {
 			t.Errorf("expected status code %d, got %d", http.StatusBadRequest, rr.Code)
 		}
 
+		var response ErrorResponse
+		err = json.NewDecoder(rr.Body).Decode(&response)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if response.Error != errNameRequired.Error() {
+			t.Errorf("expected error message %s, got %s", response.Error, errNameRequired.Error())
+		}
 	})
 
 }
