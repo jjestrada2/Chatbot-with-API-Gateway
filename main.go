@@ -1,4 +1,4 @@
-ackage main
+package main
 
 import (
 	"log"
@@ -9,14 +9,13 @@ import (
 func main() {
 	cfg := mysql.Config{
 		//config
-		User:                 "root",
-		Passwd:               "mypassword",
-		Addr:                 "",
-		DBName:               "projectmanager",
+		User:                 Envs.DBUser,
+		Passwd:               Envs.DBPassword,
+		Addr:                 Envs.DBAddress,
+		DBName:               Envs.DBName,
 		Net:                  "tcp",
 		AllowNativePasswords: true,
 		ParseTime:            true,
-
 	}
 
 	sqlStorage := NewMySQLStorage(cfg)
