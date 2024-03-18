@@ -8,16 +8,15 @@ type Storage struct {
 
 type Store interface {
 	// Users
-	CreateUser(error)
-	
+	CreateUser() error
 }
 
-func NewStore(db *sql.DB) *Storage{
+func NewStore(db *sql.DB) *Storage {
 	return &Storage{
-		db:db,
+		db: db,
 	}
 }
 
-func (s *Storage) CreateUser() error{
+func (s *Storage) CreateUser() error {
 	return nil
 }
