@@ -9,6 +9,14 @@ import (
 func main() {
 	cfg := mysql.Config{
 		//config
+		User:                 "root",
+		Passwd:               "mypassword",
+		Addr:                 "",
+		DBName:               "projectmanager",
+		Net:                  "tcp",
+		AllowNativePasswords: true,
+		ParseTime:            true,
+
 	}
 
 	sqlStorage := NewMySQLStorage(cfg)
