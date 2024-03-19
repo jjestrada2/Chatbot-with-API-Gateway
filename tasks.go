@@ -22,7 +22,7 @@ func NewTasksService(s Store) *TasksService {
 }
 
 func (s *TasksService) RegisterRoutes(r *mux.Router) {
-	r.HandleFunc("/tasks", WithJWTAuth(s.handleCreateTask, s.store)).Methods("POST")
+	r.HandleFunc("/tasks", s.handleCreateTask).Methods("POST")
 	r.HandleFunc("/tasks/{id}", WithJWTAuth(s.handleGetTask, s.store)).Methods("GET")
 }
 
@@ -34,9 +34,9 @@ func (s *TasksService) handleCreateTask(w http.ResponseWriter, r *http.Request) 
 	}
 
 	defer r.Body.Close()
+
 	var task *Task
 	err = json.Unmarshal(body, &task)
-
 	if err != nil {
 		WriteJSON(w, http.StatusBadRequest, ErrorResponse{Error: "Invalid request payload"})
 		return
@@ -52,6 +52,7 @@ func (s *TasksService) handleCreateTask(w http.ResponseWriter, r *http.Request) 
 		WriteJSON(w, http.StatusInternalServerError, ErrorResponse{Error: "Error creating task"})
 		return
 	}
+
 	WriteJSON(w, http.StatusCreated, t)
 }
 

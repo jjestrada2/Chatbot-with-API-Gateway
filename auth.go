@@ -44,10 +44,18 @@ func WithJWTAuth(handlerFunc http.HandlerFunc, store Store) http.HandlerFunc {
 	}
 }
 
-func permissionDenied(w http.ResponseWriter) {
-	WriteJSON(w, http.StatusUnauthorized, ErrorResponse{
-		Error: fmt.Errorf("permission denied").Error(),
+func CreateJWT(secret []byte, userID int64) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"userID":    strconv.Itoa(int(userID)),
+		"expiresAt": time.Now().Add(time.Hour * 24 * 120).Unix(),
 	})
+
+	tokenString, err := token.SignedString(secret)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, err
 }
 
 func HashPassword(password string) (string, error) {
@@ -71,16 +79,8 @@ func validateJWT(tokenString string) (*jwt.Token, error) {
 	})
 }
 
-func CreateJWT(secret []byte, userID int64) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userID":    strconv.Itoa(int(userID)),
-		"expiresAt": time.Now().Add(time.Hour * 24 * 120).Unix(),
+func permissionDenied(w http.ResponseWriter) {
+	WriteJSON(w, http.StatusUnauthorized, ErrorResponse{
+		Error: fmt.Errorf("permission denied").Error(),
 	})
-
-	tokenString, err := token.SignedString(secret)
-	if err != nil {
-		return "", err
-	}
-
-	return tokenString, err
 }
