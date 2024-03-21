@@ -1,10 +1,11 @@
 # FastlyAPI
-![Example chatbot](img/1.png "Example chatbot")
-![Example chatbot](img/2.png "Example chatbot")
 
 ## Introduction
 
 Welcome to the Fastly RecruitRover API – a hiring assistant designed to transform the candidate experience at Fastly. This API is the central nerve system that orchestrates a seamless interaction between job applicants and the company’s recruitment process, ensuring efficiency and engagement every step of the way.
+
+![Example chatbot](img/1.png "Example chatbot")
+![Example chatbot](img/2.png "Example chatbot")
 
 Built with Go, our API is composed of several microservices that handle distinct facets of the recruitment journey:
 ## System Architecture
