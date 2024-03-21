@@ -22,7 +22,6 @@ Fastly RecruitRover's API goal is to make conversations smoother between candida
 ![System Architecture](img/3.png "System Architecture")
 
 
-
 ## Installation
 
 Before you begin, make sure you have [Go](https://golang.org/dl/) installed on your system.
