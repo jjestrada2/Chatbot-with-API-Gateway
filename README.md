@@ -19,11 +19,9 @@ Acts as a responsive knowledge hub, instantly fielding questions from candidates
 Fastly RecruitRover's API goal is to make conversations smoother between candidates going through the hiring process and our team.
 
 ## System Architecture
-![System Architecture](img/Screenshot 2024-03-21 at 3.32.10 PM.png "System Architecture")
+![System Architecture](img/3.png "System Architecture")
 
 
-
-## Getting Started
 
 ## Installation
 
