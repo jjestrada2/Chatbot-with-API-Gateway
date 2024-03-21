@@ -10,6 +10,7 @@ type Store interface {
 	// Users
 	CreateUser(u *User) (*User, error)
 	GetUserByID(id string) (*User, error)
+	GetUserByEmail(email string) (*User, error)
 	// Projects
 	CreateProject(p *Project) error
 	GetProject(id string) (*Project, error)
@@ -17,6 +18,8 @@ type Store interface {
 	// Tasks
 	CreateTask(t *Task) (*Task, error)
 	GetTask(id string) (*Task, error)
+	//Question
+	CreateQuestion(q *Question) (*Question, error)
 }
 
 func NewStore(db *sql.DB) *Storage {
@@ -66,8 +69,14 @@ func (s *Storage) GetUserByID(id string) (*User, error) {
 	return &u, err
 }
 
+func (s *Storage) GetUserByEmail(email string) (*User, error) {
+	var u User
+	err := s.db.QueryRow("SELECT id, email, firstName, lastName, createdAt FROM users WHERE email = ?", email).Scan(&u.ID, &u.Email, &u.FirstName, &u.LastName, &u.CreatedAt)
+	return &u, err
+}
+
 func (s *Storage) CreateTask(t *Task) (*Task, error) {
-	rows, err := s.db.Exec("INSERT INTO tasks (name, status, project_id, assigned_to) VALUES (?, ?, ?, ?)", t.Name, t.Status, t.ProjectID, t.AssignedToID)
+	rows, err := s.db.Exec("INSERT INTO tasks (name, status, projectId, AssignedToID) VALUES (?, ?, ?, ?)", t.Name, "TODO", t.ProjectID, t.AssignedToID)
 
 	if err != nil {
 		return nil, err
@@ -80,6 +89,22 @@ func (s *Storage) CreateTask(t *Task) (*Task, error) {
 
 	t.ID = id
 	return t, nil
+}
+
+func (s *Storage) CreateQuestion(q *Question) (*Question, error) {
+	rows, err := s.db.Exec("INSERT INTO questions (name, answer,projectId) VALUES (?, ?, ?)", q.Name, q.Answer, q.ProjectID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := rows.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	q.ID = id
+	return q, nil
 }
 
 func (s *Storage) GetTask(id string) (*Task, error) {

@@ -42,7 +42,27 @@ func (s *MySQLStorage) Init() (*sql.DB, error) {
 		return nil, err
 	}
 
+	if err := s.createQuestionsTable(); err != nil {
+		return nil, err
+	}
 	return s.db, nil
+}
+
+func (s *MySQLStorage) createQuestionsTable() error {
+	_, err := s.db.Exec(`
+		CREATE TABLE IF NOT EXISTS questions (
+			id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+			name VARCHAR(255) NOT NULL,
+			answer VARCHAR(255) NOT NULL,
+			projectId INT UNSIGNED NOT NULL,
+			createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+			PRIMARY KEY (id),
+			FOREIGN KEY (projectId) REFERENCES projects(id)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	`)
+
+	return err
 }
 
 func (s *MySQLStorage) createUsersTable() error {

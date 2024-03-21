@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/go-sql-driver/mysql"
+	
 )
 
 func main() {
@@ -18,6 +19,7 @@ func main() {
 	}
 
 	sqlStorage := NewMySQLStorage(cfg)
+
 
 	db, err := sqlStorage.Init()
 	if err != nil {

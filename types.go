@@ -47,3 +47,11 @@ type LoginRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+type Question struct {
+	ID        int64     `json:"id"`
+	Name      string    `json:"name"`
+	Answer    string    `json:"answer"`
+	ProjectID int64     `json:"projectID"`
+	CreatedAt time.Time `json:"createdAt"`
+}

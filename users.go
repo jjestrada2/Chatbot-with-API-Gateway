@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var errEmailRequired = errors.New("email is required")
@@ -71,10 +72,46 @@ func (s *UserService) handleUserRegister(w http.ResponseWriter, r *http.Request)
 }
 
 func (s *UserService) handleUserLogin(w http.ResponseWriter, r *http.Request) {
-	// 1. Find user in db by email
-	// 2. Compare password with hashed password
-	// 3. Create JWT and set it in a cookie
-	// 4. Return JWT in response
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusBadRequest)
+		return
+	}
+
+	defer r.Body.Close()
+
+	var loginReq LoginRequest
+	err = json.Unmarshal(body, &loginReq)
+	if err != nil {
+		WriteJSON(w, http.StatusBadRequest, ErrorResponse{Error: "Invalid request payload"})
+		return
+	}
+
+	// Step 2: Find the user in the database by email
+	user, err := s.store.GetUserByEmail(loginReq.Email)
+	if err != nil {
+		WriteJSON(w, http.StatusUnauthorized, ErrorResponse{Error: "Invalid login credentials"})
+		return
+	}
+
+	// Step 3: Compare the provided password with the hashed password
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginReq.Password))
+	if err != nil {
+		// Password does not match
+		WriteJSON(w, http.StatusUnauthorized, ErrorResponse{Error: "Invalid login credentials"})
+		return
+	}
+
+	// Step 4: Create JWT and set it in a cookie
+	token, err := createAndSetAuthCookie(user.ID, w)
+	if err != nil {
+		WriteJSON(w, http.StatusInternalServerError, ErrorResponse{Error: "Failed to create authentication token"})
+		return
+	}
+
+	// Step 5: Return JWT in response
+	WriteJSON(w, http.StatusOK, map[string]string{"token": token})
+
 }
 
 func validateUserPayload(user *User) error {
