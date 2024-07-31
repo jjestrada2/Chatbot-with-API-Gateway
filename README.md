@@ -41,15 +41,15 @@ Before you begin, make sure you have [Go](https://golang.org/dl/) installed on y
 ```bash
 # Step 1: Clone the repository
 git clone https://github.com/jjestrada2/FastlyAPI
-
+```
 # Step 2: Install dependencies
-
+```bash
 go mod download
-
+```
 # Step 3: Start the project
-
+```bash
 make run 
-
+```
 ## Usage🎮
 
 Start the API gateway server (from the api-gateway-go/ directory).
